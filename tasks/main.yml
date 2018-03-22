@@ -1,0 +1,15 @@
+---
+
+- name: Link go root binaries
+  file: src={{ GOROOT }}/bin/{{ item }} dest={{ go_bin_link_dir }}/{{ item }} state=link
+  when: go_bin_link_root|bool == true
+  with_items: "{{ go_bin_link_root_items }}"
+  environment:
+    GOROOT: "{{ GOROOT }}"
+
+- name: Link go_get binaries
+  file: src={{ GOPATH }}/bin/{{ item.name }} dest={{ go_bin_link_dir }}/{{ item.name }} state=link
+  when: item.link is defined and item.link|bool == true
+  with_items: "{{ go_get }}"
+  environment:
+    GOPATH: "{{ GOPATH }}"
